@@ -7,7 +7,7 @@ variable "github_token" {
 variable "repository_name" {
   description = "The name of the GitHub repository."
   type        = string
-  default     = "proxmox-vm-dnszilla"
+  default     = "proxmox-vms"
 }
 
 variable "repository_owner" {
@@ -19,7 +19,7 @@ variable "repository_owner" {
 variable "repository_description" {
   description = "A description for the GitHub repository"
   type        = string
-  default     = "Managed by Terraform:[HomeLab] proxmox-vm-dsnzilla"
+  default     = "Managed by Terraform:[HomeLab] proxmox-vms"
 }
 
 variable "visibility" {
@@ -27,9 +27,3 @@ variable "visibility" {
   type        = string
   default     = "public"
 }
-
-# Variable to store the list of collaborators with their respective permissions
-# variable "collaborators" {
-#   type = map(string)
-#   description = "A map of collaborators where the key is the GitHub username and the value is the permission level"
-# }
