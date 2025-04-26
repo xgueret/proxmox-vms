@@ -1,0 +1,167 @@
+---
+- name: Install dependencies for PowerDNS-Admin
+  ansible.builtin.apt:
+    name: "{{ powerdns_pdns_admin }}"
+    state: present
+
+- name: Create PowerDNS-Admin group
+  ansible.builtin.group:
+    name: powerdnsadmin
+    state: present
+
+- name: Create PowerDNS-Admin user
+  ansible.builtin.user:
+    name: "{{ powerdns_pdnsadmin_admin_user_system }}"
+    group: "{{ powerdns_pdnsadmin_admin_group_system }}"
+    system: true
+    shell: /bin/bash
+    create_home: false
+
+- name: Create PowerDNS-Admin directory
+  ansible.builtin.file:
+    path: "/opt/powerdns-admin"
+    state: directory
+    owner: "{{ powerdns_pdnsadmin_admin_user_system }}"
+    group: "{{ powerdns_pdnsadmin_admin_group_system }}"
+    mode: '0755'
+
+- name: Clone PowerDNS-Admin repository
+  ansible.builtin.git:
+    repo: "{{ powerdns_admin_repo_url }}"
+    dest: "/opt/powerdns-admin"
+    version: "{{ powerdns_admin_repo_version }}"
+    force: true
+  become: true
+  become_user: "{{ powerdns_pdnsadmin_admin_user_system }}"
+
+- name: Create Python virtual environment
+  ansible.builtin.command:
+    cmd: python3 -m venv /opt/powerdns-admin/venv
+    creates: /opt/powerdns-admin/venv
+  become: true
+  become_user: "{{ powerdns_pdnsadmin_admin_user_system }}"
+
+- name: Update setuptools version in requirements.txt to fix distutils module issue
+  ansible.builtin.replace:
+    path: /opt/powerdns-admin/requirements.txt
+    regexp: 'setuptools==65\.5\.1 # fixes CVE-2022-40897'
+    replace: 'setuptools==79.0.0 # fixes CVE-2022-40897'
+  register: setuptools_update
+
+- name: Install Python dependencies
+  ansible.builtin.pip:
+    requirements: "/opt/powerdns-admin/requirements.txt"
+    virtualenv: "/opt/powerdns-admin/venv"
+  become: true
+  become_user: "{{ powerdns_pdnsadmin_admin_user_system }}"
+
+- name: Installer les dépendances Node.js avec cache local
+  ansible.builtin.command:
+    cmd: "/usr/bin/npm install --verbose --cache /opt/powerdns-admin/.npm-cache --unsafe-perm"
+    chdir: "/opt/powerdns-admin"
+  become: true
+  become_user: "{{ powerdns_pdnsadmin_admin_user_system }}"
+  environment:
+    HOME: "/opt/powerdns-admin"
+
+- name: Installer les dépendances Node.js
+  ansible.builtin.command:
+    cmd: "/usr/bin/npm install --verbose --unsafe-perm"
+    chdir: "/opt/powerdns-admin"
+  become: true
+  become_user: "{{ powerdns_pdnsadmin_admin_user_system }}"
+  environment:
+    HOME: "/opt/powerdns-admin"
+
+- name: Setup Flask environment file
+  ansible.builtin.copy:
+    content: |
+      FLASK_APP=powerdnsadmin
+    dest: "/opt/powerdns-admin/.env"
+    owner: "{{ powerdns_pdnsadmin_admin_user_system }}"
+    group: "{{ powerdns_pdnsadmin_admin_group_system }}"
+    mode: '0644'
+
+- name: Create static directory
+  ansible.builtin.file:
+    path: "/opt/powerdns-admin/powerdnsadmin/static"
+    state: directory
+    owner: "{{ powerdns_pdnsadmin_admin_user_system }}"
+    group: "{{ powerdns_pdnsadmin_admin_group_system }}"
+    mode: '0755'
+
+- name: Create symbolic link for node_modules
+  ansible.builtin.file:
+    src: "/opt/powerdns-admin/node_modules"
+    dest: "/opt/powerdns-admin/powerdnsadmin/static/node_modules"
+    state: link
+    owner: "{{ powerdns_pdnsadmin_admin_user_system }}"
+    group: "{{ powerdns_pdnsadmin_admin_group_system }}"
+  become: true
+
+- name: Build PowerDNS-Admin assets
+  ansible.builtin.command:
+    cmd: "/opt/powerdns-admin/venv/bin/flask assets build"
+    chdir: "/opt/powerdns-admin"
+  environment:
+    FLASK_APP: "powerdnsadmin"
+  become: true
+  become_user: "{{ powerdns_pdnsadmin_admin_user_system }}"
+  register: assets_result
+  changed_when: assets_result.rc == 0
+
+- name: Copy PowerDNS-Admin config template
+  ansible.builtin.template:
+    src: config.py.j2
+    dest: "/opt/powerdns-admin/config.py"
+    owner: "{{ powerdns_pdnsadmin_admin_user_system }}"
+    group: "{{ powerdns_pdnsadmin_admin_group_system }}"
+    mode: '0644'
+
+- name: Initialize PowerDNS-Admin database
+  ansible.builtin.command:
+    cmd: "/opt/powerdns-admin/venv/bin/flask db upgrade"
+    chdir: "/opt/powerdns-admin"
+  environment:
+    FLASK_APP: "powerdnsadmin"
+    FLASK_ENV: "production"
+  become: true
+  become_user: "{{ powerdns_pdnsadmin_admin_user_system }}"
+  register: db_init_result
+  changed_when: "'No changes in schema detected' not in db_init_result.stdout"
+
+
+- name: Create PowerDNS-Admin logs directory
+  ansible.builtin.file:
+    path: "/opt/powerdns-admin/logs"
+    state: directory
+    owner: "{{ powerdns_pdnsadmin_admin_user_system }}"
+    group: "{{ powerdns_pdnsadmin_admin_group_system }}"
+    mode: '0755'
+
+- name: Touch log files with correct permissions
+  ansible.builtin.file:
+    path: "/opt/powerdns-admin/logs/{{ item }}"
+    state: touch
+    owner: "{{ powerdns_pdnsadmin_admin_user_system }}"
+    group: "{{ powerdns_pdnsadmin_admin_group_system }}"
+    mode: '0644'
+  loop:
+    - gunicorn.log
+    - access.log
+    - error.log
+    - powerdns-admin.log
+
+
+- name: Copy PowerDNS-Admin systemd service file
+  ansible.builtin.template:
+    src: powerdns-admin.service.j2
+    dest: /etc/systemd/system/powerdns-admin.service
+    mode: '0644'
+  notify: Reload systemd daemon
+
+- name: Enable and start PowerDNS-Admin service
+  ansible.builtin.systemd_service:
+    name: powerdns-admin
+    enabled: true
+    state: started

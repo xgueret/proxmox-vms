@@ -1,0 +1,69 @@
+powerdns_pdns_dependencies:
+  - curl
+  - software-properties-common
+  - gnupg
+  - mariadb-server
+  - mariadb-client
+  - python3-pip
+  # - python3-dev
+  - python3-pymysql
+
+
+powerdns_mysql_root_password: "{{ powerdns_vault_mysql_root_password }}"
+
+powerdns_db_host: 127.0.0.1
+powerdns_database: powerdns
+
+powerdns_db_user: pdns
+powerdns_db_password: "{{ powerdns_vault_pdns_db_password }}"
+
+powerdns_db_schema_path: /usr/share/doc/pdns-backend-mysql/schema.mysql.sql
+
+powerdns_keyring_dir: /etc/apt/keyrings
+powerdns_key_url: https://repo.powerdns.com/FD380FBB-pub.asc
+powerdns_key_dest: "{{ powerdns_keyring_dir }}/auth-49-pub.asc"
+powerdns_repo_file: /etc/apt/sources.list.d/pdns.list
+powerdns_repo_url: http://repo.powerdns.com/debian
+powerdns_repo_distribution: bookworm-auth-49
+powerdns_repo_component: main
+powerdns_preferences_file: /etc/apt/preferences.d/auth-49
+powerdns_package_name: pdns-server
+powerdns_pin_priority: 600
+
+powerdns_webserver_password: "{{ powerdns_vault_webserver_password }}"
+
+powerdns_service: pdns
+
+powerdns_admin_repo_url: https://github.com/PowerDNS-Admin/PowerDNS-Admin.git
+powerdns_admin_repo_version: master
+
+powerdns_pdns_admin:
+  - libxml2-dev
+  - libxmlsec1-dev
+  - libxmlsec1-openssl
+  - python3-dev
+  - git
+  - libsasl2-dev
+  - libldap2-dev
+  - python3-venv
+  - libmariadb-dev
+  - pkg-config
+  - build-essential
+  - curl
+  - libpq-dev
+  - nodejs
+  - npm
+  - libffi-dev
+  - gunicorn
+
+powerdns_version: 4.9.3
+powerdns_webserver_port: 8081
+powerdns_api_key: "{{ powerdns_vault_api_key }}"
+powerdns_pdnsadmin_admin_password: "{{ powerdns_vault_pdnsadmin_admin_password }}"
+powerdns_pdnsadmin_admin_user: "{{ powerdns_vault_pdnsadmin_admin_user }}"
+powerdns_pdnsadmin_admin_email: "{{ powerdns_vault_pdnsadmin_admin_email }}"
+powerdns_pdnsadmin_debug: false
+powerdns_pdnsadmin_allow_signup: false
+
+powerdns_pdnsadmin_admin_user_system: powerdnsadmin
+powerdns_pdnsadmin_admin_group_system: powerdnsadmin

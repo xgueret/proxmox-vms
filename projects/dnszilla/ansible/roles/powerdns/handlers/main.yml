@@ -1,0 +1,10 @@
+- name: Restart PowerDNS
+  ansible.builtin.systemd_service:
+    name: "{{ powerdns_service }}"
+    state: restarted
+    enabled: true
+    daemon_reload: true
+
+- name: Reload systemd daemon
+  ansible.builtin.systemd_service:
+    daemon_reload: true

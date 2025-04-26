@@ -1,0 +1,7 @@
+all:
+  children:
+    dnszilla:
+      hosts:
+        powerdns:
+          ansible_host: dnszilla-10
+          # ansible_python_interpreter: /usr/bin/python3

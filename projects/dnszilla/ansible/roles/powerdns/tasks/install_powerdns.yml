@@ -1,0 +1,158 @@
+---
+- name: Update APT package cache
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Install dependencies
+  ansible.builtin.apt:
+    name: "{{ powerdns_pdns_dependencies }}"
+    state: present
+
+- name: Ensure MySQL root password is set if not already configured
+  ansible.builtin.command:
+    cmd: "mysqladmin -u root password '{{ powerdns_mysql_root_password }}'"
+  register: mysql_root_password_set
+  failed_when: mysql_root_password_set.rc not in [0, 1]
+  changed_when: mysql_root_password_set.rc == 0
+
+- name: Remove anonymous MySQL users
+  community.mysql.mysql_user:
+    name: ''
+    host_all: true
+    state: absent
+    login_user: root
+    login_password: "{{ powerdns_mysql_root_password }}"
+
+- name: Remove MySQL test database
+  community.mysql.mysql_db:
+    name: test
+    state: absent
+    login_user: root
+    login_password: "{{ powerdns_mysql_root_password }}"
+
+- name: Disable MySQL root remote access
+  community.mysql.mysql_user:
+    name: root
+    host: "{{ item }}"
+    state: absent
+    login_user: root
+    login_password: "{{ powerdns_mysql_root_password }}"
+  loop:
+    - "%"
+    - "::1"
+    - "127.0.0.1"
+
+- name: Create PowerDNS database
+  community.mysql.mysql_db:
+    name: "{{ powerdns_database }}"
+    state: present
+    login_user: root
+    login_password: "{{ powerdns_mysql_root_password }}"
+
+- name: Create PowerDNS user with limited privileges
+  community.mysql.mysql_user:
+    name: "{{ powerdns_db_user }}"
+    password: "{{ powerdns_db_password }}"
+    priv: "{{ powerdns_database }}.*:ALL"
+    state: present
+    login_user: root
+    login_password: "{{ powerdns_mysql_root_password }}"
+
+- name: Disable systemd-resolved to avoid conflicts with PowerDNS
+  ansible.builtin.systemd_service:
+    name: systemd-resolved
+    state: stopped
+    enabled: false
+
+- name: Check file type
+  ansible.builtin.stat:
+    path: /etc/resolv.conf
+  register: ansible_stat
+
+- name: Delete symbolic link if exists
+  ansible.builtin.file:
+    path: /etc/resolv.conf
+    state: absent
+  when: ansible_stat.stat.islnk is defined and ansible_stat.stat.islnk
+  register: stat_result
+  check_mode: false
+
+- name: Template resolv.conf.j2 to /etc/resolv.conf
+  ansible.builtin.template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Ensure keyring directory exists
+  ansible.builtin.file:
+    path: "{{ powerdns_keyring_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Download and save PowerDNS GPG key
+  ansible.builtin.get_url:
+    url: "{{ powerdns_key_url }}"
+    dest: "{{ powerdns_key_dest }}"
+    mode: '0644'
+
+- name: Add PowerDNS repository
+  ansible.builtin.copy:
+    dest: "{{ powerdns_repo_file }}"
+    content: |
+      deb [signed-by={{ powerdns_key_dest }}] {{ powerdns_repo_url }} {{ powerdns_repo_distribution }} {{ powerdns_repo_component }}
+    mode: '0644'
+
+- name: Set package preferences for PowerDNS
+  ansible.builtin.copy:
+    dest: "{{ powerdns_preferences_file }}"
+    content: |
+      Package: auth*
+      Pin: origin {{ powerdns_repo_url }}
+      Pin-Priority: {{ powerdns_pin_priority }}
+    mode: '0644'
+
+- name: Update APT package cache
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: Install PowerDNS and MySQL backend
+  ansible.builtin.apt:
+    name:
+      - pdns-server
+      - pdns-backend-mysql
+    state: present
+
+- name: Check if PowerDNS schema is already imported
+  community.mysql.mysql_query:
+    login_user: root
+    login_password: "{{ powerdns_mysql_root_password }}"
+    query: "SELECT COUNT(*) as count FROM information_schema.tables WHERE table_schema='{{ powerdns_database }}' AND table_name='domains';"
+  register: pdns_schema_check
+  changed_when: false
+
+- name: Import PowerDNS schema
+  community.mysql.mysql_db:
+    name: "{{ powerdns_database }}"
+    state: import
+    target: "{{ powerdns_db_schema_path }}"
+    login_user: root
+    login_password: "{{ powerdns_mysql_root_password }}"
+  when: pdns_schema_check.query_result[0][0]['count'] | int == 0
+
+- name: Copy configuration file
+  ansible.builtin.template:
+    src: pdns.conf.j2
+    dest: /etc/powerdns/pdns.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart PowerDNS
+
+- name: Enable and start PowerDNS
+  ansible.builtin.systemd_service:
+    name: "{{ powerdns_service }}"
+    enabled: true
+    state: started

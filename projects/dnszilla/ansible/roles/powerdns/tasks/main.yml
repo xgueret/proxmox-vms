@@ -1,0 +1,5 @@
+- name: Install and configute PowerDNS server components
+  ansible.builtin.import_tasks: install_powerdns.yml
+
+- name: Install and configure PowerDNS Admin interface
+  ansible.builtin.import_tasks: install_powerdns_admin.yml

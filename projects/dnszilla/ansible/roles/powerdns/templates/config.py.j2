@@ -1,0 +1,67 @@
+import os
+basedir = os.path.abspath(os.path.dirname(__file__))
+
+# BASIC APP CONFIG
+SALT = '{{ lookup("community.general.random_string", length=32, special=false) }}'
+SECRET_KEY = '{{ lookup("community.general.random_string", length=32, special=false) }}'
+BIND_ADDRESS = '0.0.0.0'
+PORT = 9191
+HSTS_ENABLED = False
+
+# TIMEZONE
+TIMEZONE = 'Europe/Paris'
+
+# DATABASE CONFIG
+SQLALCHEMY_DATABASE_URI = 'mysql://{{ powerdns_db_user }}:{{ powerdns_db_password }}@localhost/{{ powerdns_database }}'
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+# POWERDNS CONFIG
+PDNS_STATS_URL = 'http://127.0.0.1:{{ powerdns_webserver_port }}/api/v1/'
+PDNS_API_KEY = '{{ powerdns_api_key }}'
+PDNS_VERSION = '{{ powerdns_version }}'
+PDNS_API_URL = 'http://127.0.0.1:{{ powerdns_webserver_port }}/api/v1'
+
+# RECORDS ALLOWED TO EDIT
+RECORDS_ALLOW_EDIT = ['A', 'AAAA', 'CAA', 'CNAME', 'MX', 'PTR', 'SPF', 'SRV', 'TXT']
+
+# ADMINISTRATION CONFIG
+ADMIN_USERNAME = '{{ powerdns_pdnsadmin_admin_user }}'
+ADMIN_PASSWORD = '{{ powerdns_pdnsadmin_admin_password }}'
+ADMIN_EMAIL = '{{ powerdns_pdnsadmin_admin_email }}'
+
+# LOG CONFIG
+LOG_FILE = 'logs/powerdns-admin.log'
+LOG_LEVEL = 'INFO'
+
+# SECURITY CONFIG
+SESSION_TYPE = 'filesystem'
+REVERSE_PROXY_SETUP = False
+CSRF_ENABLED = True
+
+# DEBUG MODE
+DEBUG = {{ powerdns_pdnsadmin_debug | default(false) | lower }}
+
+# AUTHENTICATION CONFIG
+BASIC_ENABLED = True
+SIGNUP_ENABLED = {{ powerdns_pdnsadmin_allow_signup | default(false) | lower }}
+
+# LOCAL AUTH
+LOCAL_DB_ENABLED = True
+
+# MAIL CONFIG
+MAIL_SERVER = 'localhost'
+MAIL_PORT = 25
+MAIL_USE_TLS = False
+MAIL_USE_SSL = False
+MAIL_USERNAME = None
+MAIL_PASSWORD = None
+MAIL_DEFAULT_SENDER = ('PowerDNS-Admin', 'noreply@powerdns-admin.local')
+
+# MAINTENANCE
+MAINTENANCE_MODE = False
+
+# DNSSEC Settings
+DNSSEC_ADMINS_ONLY = False
+
+# Define number of items per page
+ITEMS_PER_PAGE = 20

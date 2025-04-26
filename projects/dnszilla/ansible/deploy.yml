@@ -1,0 +1,15 @@
+---
+- name: Deploy PowerDNS and PowerDNS-Admin
+  hosts: powerdns
+  become: true
+  pre_tasks:
+    - name: Ensure Ansible temp directory exists
+      ansible.builtin.file:
+        path: /tmp/.ansible/tmp
+        state: directory
+        mode: '0700'
+        owner: ansible
+        group: ansible
+
+  roles:
+    - powerdns

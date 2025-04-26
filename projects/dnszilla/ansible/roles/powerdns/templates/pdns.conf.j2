@@ -1,0 +1,16 @@
+# Launch gmysql backend
+launch=gmysql
+
+# gmysql parameters
+gmysql-host={{ powerdns_db_host }}
+gmysql-dbname={{ powerdns_database }}
+gmysql-user={{ powerdns_db_user }}
+gmysql-password={{ powerdns_db_password }}
+#gmysql-dnssec=yes
+
+# webserver paramters
+api=yes
+api-key={{ powerdns_api_key }}
+webserver=yes
+webserver-address=0.0.0.0
+webserver-port={{ powerdns_webserver_port }}
