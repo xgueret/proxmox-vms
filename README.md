@@ -1,111 +1,101 @@
-# 🚀 DNS Automation Project with PowerDNS and 🛡️ PowerDNS-Admin
 
-![Stars](https://img.shields.io/github/stars/xgueret/proxmox-vm-dsnzilla?style=social) ![Last Commit](https://img.shields.io/github/last-commit/xgueret/proxmox-vm-dnszilla) ![Status](https://img.shields.io/badge/Status-Active-brightgreen)
+# 🚀 Proxmox VM Automation Project
 
-This project automates the deployment of a PowerDNS server with its PowerDNS-Admin web interface using Ansible and Terraform.
+![Stars](https://img.shields.io/github/stars/xgueret/proxmox-vms?style=social)![Last Commit](https://img.shields.io/github/last-commit/xgueret/proxmox-vms)![Status](https://img.shields.io/badge/Status-Active-brightgreen)![License](https://img.shields.io/badge/License-MIT-blue)
+![Terraform](https://img.shields.io/badge/Terraform-%E2%89%A51.11.0-623CE4)![Ansible](https://img.shields.io/badge/Ansible-2.14+-EE0000)
 
-## 🌐 Project Architecture
+**This project provides Terraform and Ansible automation for managing virtual machines in a Proxmox VE environment.**
 
-The project is structured in two main parts:
+## 🌟 Features
 
-1. **Terraform**: For VM provisioning
-2. **Ansible**: For service installation and configuration
+* **Infrastructure as Code**: Complete VM lifecycle management
+* **Modular Design**: Reusable components for different use cases
+* **Secure Practices**: Encrypted secrets and pre-commit checks
+* **Multi-project Support**: Various infrastructure components
 
 ## 📋 Prerequisites
 
-- Terraform (>= 1.11.0)
-- Ansible
-- Proxmox account with appropriate permissions
-- GitHub access (if using the repository management part)
+* **Terraform (≥ 1.11.0)**
+* **Ansible**
+* **Proxmox VE cluster**
+* **Python 3.8+**
+* **Pre-commit (for development)**
 
-## 🛠️ Usage
+## 🏗️ Project Structure
 
-### 1. VM Provisioning with Terraform
+```
+.
+├── modules/ # Reusable Terraform modules
+├── projects/ # Infrastructure projects
+├── github/ # GitHub repository management
+├── ansible.cfg # Ansible configuration
+├── .pre-commit-config.yaml # Git hooks
+└── requirements.txt # Python dependencies
+```
 
-1. Go to the `terraform/proxmox/` directory
-2. Create a `terraform.tfvars` file with your variables (example below)
-3. Run:
-   ```bash
+## 🔐 Security
+
+* **Sensitive data encrypted with Ansible Vault**
+* **Pre-commit hooks verify encryption**
+* **Secure API token handling**
+
+1. **Clone the repository**
+2. **Install dependencies:**
+   ```
+   pip install -r requirements.txt
+   pre-commit install
+   ```
+3. **Configure your Proxmox credentials**
+4. **Navigate to the desired project directory**
+
+## 🚦 Getting Started
+
+### 🛠️ Usage in each project
+
+#### 1. VM Provisioning with Terraform
+
+1. **Go to the **`terraform/` directory
+2. **Create a **`terraform.tfvars` file with your variables (example below)
+3. **Run:**
+   ```
    terraform init
    terraform plan
    terraform apply
 
-Example `terraform.tfvars`:
+   ```
 
-```properties
-pm_api_url           = "https://your-proxmox-server:8006/api2/json"
-pm_api_token_id      = "your-user@pam!token-name"
-pm_api_token_secret  = "your-token-secret"
-vm_template_id       = 9000  # Your template ID
-```
+#### 2. Configuration with Ansible
 
-### 2. Configuration with Ansible
-
-1. Go to the `ansible/` directory
-
-2. Configure variables in:
-
-   - `group_vars/dnszilla/vault/main.yml` (encrypted with ansible-vault)
-   - `roles/powerdns/vars/main.yml`
-
-3. Run the playbook:
-
-   ```bash
+1. **Go to the **`ansible/` directory
+2. **Configure variables in:**
+   * `group_vars/project_name/vault/main.yml` (encrypted with ansible-vault)
+   * `roles/.../vars/main.yml`
+3. **Run the playbook:**
+   ```
    ansible-playbook deploy.yml
    ```
 
-### 🔑 Important Ansible Variables
+## 📂 Projects
 
-Main variables are defined in:
+### 🦖 DNSzilla
 
-- `ansible/roles/powerdns/vars/main.yml`
-- `ansible/group_vars/dnszilla/vault/main.yml` (encrypted)
+**Location**: `projects/dnszilla/`
+**Automates deployment of PowerDNS server with PowerDNS-Admin web interface. Includes:**
 
-## 🔒 Security
+* **Terraform VM provisioning**
+* **Ansible configuration for DNS services**
+* **MySQL backend integration**
 
-Sensitive files are encrypted with Ansible Vault. A pre-commit hook verifies that files in the `vault/` directory are properly encrypted.
+### ⚛️ Neutron (Coming Soon)
 
-## 💻 Code Management
-
-The project includes pre-commit configuration for:
-
-- Shell script formatting
-- Ansible syntax checking
-- Terraform validation
-- Ensuring sensitive files are encrypted
-
-To install hooks:
-
-```bash
-pre-commit install
-```
-
-## 📂 File Structure
-
-```
-.
-├── ansible/                  # Ansible configuration
-│   ├── ansible.cfg           # Global Ansible config
-│   ├── deploy.yml            # Main playbook
-│   ├── inventory.yml         # Host inventory
-│   └── roles/powerdns/       # PowerDNS role
-├── terraform/
-│   ├── proxmox/              # Proxmox configuration
-│   └── github/               # GitHub configuration
-├── check_ansible_vault.sh    # Encryption verification script
-└── .pre-commit-config.yaml   # pre-commit configuration
-```
----
+**Location**: `projects/neutron/`
+**(TODO: Add description once project is developed)**
 
 ## 👥 Contributors
 
-- **Author**: Xavier GUERET 
-  [![GitHub followers](https://img.shields.io/github/followers/xgueret?style=social)](https://github.com/xgueret) [![Twitter Follow](https://img.shields.io/twitter/follow/xgueret?style=social)](https://x.com/hixmaster) [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/xavier-gueret-47bb3019b/)
+* **Author**: Xavier GUERET**
+  **[![GitHub followers](https://img.shields.io/github/followers/xgueret?style=social)](https://github.com/xgueret)[![Twitter Follow](https://img.shields.io/twitter/follow/xgueret?style=social)](https://x.com/hixmaster)[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/xavier-gueret-47bb3019b/)
 
-## 👥 Contributing
+## ✨ Contributing
 
-Contributions are welcome! Please feel free to submit a [Pull Request](https://github.com/xgueret/proxmox-vm-zilla/pulls).
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/xgueret/proxmox-vm-dnszilla/blob/main/LICENSE) file for details.labs
+**Contributions are welcome! Please feel free to submit a **[Pull Request](https://github.com/xgueret/proxmox-vms/pulls).
