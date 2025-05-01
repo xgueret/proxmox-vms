@@ -25,6 +25,8 @@ pyvenv.cfg
 # Terraform plan output
 *.tfplan
 
+github/.terraform.lock.hcl
+
 # Local .terraform directories
 .terraform/*
 

@@ -13,4 +13,5 @@ api=yes
 api-key={{ powerdns_api_key }}
 webserver=yes
 webserver-address=0.0.0.0
-webserver-port={{ powerdns_webserver_port }}
+webserver-port={{ powerdns_webserver_api_port }}
+webserver-allow-from=127.0.0.1,192.168.1.0/24

@@ -12,14 +12,14 @@ HSTS_ENABLED = False
 TIMEZONE = 'Europe/Paris'
 
 # DATABASE CONFIG
-SQLALCHEMY_DATABASE_URI = 'mysql://{{ powerdns_db_user }}:{{ powerdns_db_password }}@localhost/{{ powerdns_database }}'
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{{ powerdns_db_user }}:{{ powerdns_db_password }}@localhost/{{ powerdns_database }}'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 # POWERDNS CONFIG
-PDNS_STATS_URL = 'http://127.0.0.1:{{ powerdns_webserver_port }}/api/v1/'
+PDNS_STATS_URL = 'http://127.0.0.1:{{ powerdns_webserver_api_port }}/api/v1/'
 PDNS_API_KEY = '{{ powerdns_api_key }}'
 PDNS_VERSION = '{{ powerdns_version }}'
-PDNS_API_URL = 'http://127.0.0.1:{{ powerdns_webserver_port }}/api/v1'
+PDNS_API_URL = 'http://127.0.0.1:{{ powerdns_webserver_api_port }}/api/v1'
 
 # RECORDS ALLOWED TO EDIT
 RECORDS_ALLOW_EDIT = ['A', 'AAAA', 'CAA', 'CNAME', 'MX', 'PTR', 'SPF', 'SRV', 'TXT']
@@ -39,11 +39,11 @@ REVERSE_PROXY_SETUP = False
 CSRF_ENABLED = True
 
 # DEBUG MODE
-DEBUG = {{ powerdns_pdnsadmin_debug | default(false) | lower }}
+DEBUG = {{ powerdns_pdnsadmin_debug | default(false) | capitalize }}
 
 # AUTHENTICATION CONFIG
 BASIC_ENABLED = True
-SIGNUP_ENABLED = {{ powerdns_pdnsadmin_allow_signup | default(false) | lower }}
+SIGNUP_ENABLED = {{ powerdns_pdnsadmin_allow_signup | default(false) | capitalize }}
 
 # LOCAL AUTH
 LOCAL_DB_ENABLED = True

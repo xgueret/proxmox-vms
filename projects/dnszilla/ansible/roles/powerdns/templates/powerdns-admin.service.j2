@@ -8,16 +8,16 @@ User={{ powerdns_pdnsadmin_admin_user_system }}
 Group={{ powerdns_pdnsadmin_admin_group_system }}
 WorkingDirectory=/opt/powerdns-admin
 Environment=FLASK_APP=powerdnsadmin
-Environment=FLASK_ENV=production
+Environment=FLASK_CONF=/opt/powerdns-admin/config.py
 Environment=PATH=/opt/powerdns-admin/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 Environment=PYTHONPATH=/opt/powerdns-admin
 ExecStart=/opt/powerdns-admin/venv/bin/gunicorn \
---bind 0.0.0.0:9191 \
---workers 4 \
-powerdnsadmin:create_app()
+  --bind 0.0.0.0:9191 \
+  --workers 4 \
+  powerdnsadmin:create_app()
 
 Restart=always
 RestartSec=5
 
-[Install]   
+[Install]
 WantedBy=multi-user.target

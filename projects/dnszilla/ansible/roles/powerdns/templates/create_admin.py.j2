@@ -1,0 +1,21 @@
+from powerdnsadmin import create_app
+from powerdnsadmin.models.user import User
+from powerdnsadmin.models.base import db  # <-- clé ici
+import os
+import bcrypt
+
+app = create_app()
+with app.app_context():
+    password = os.environ.get("ADMIN_PASSWORD")
+    hashed = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+
+    user = User(
+        username=os.environ.get("ADMIN_USERNAME"),
+        password=hashed,
+        email=os.environ.get("ADMIN_EMAIL"),
+        role_id=1
+    )
+
+    db.session.add(user)
+    db.session.commit()
+    print("Admin user created successfully")

@@ -7,6 +7,8 @@ powerdns_pdns_dependencies:
   - python3-pip
   # - python3-dev
   - python3-pymysql
+  # - mariadb-connector-python
+  # - mysql-connector-python
 
 
 powerdns_mysql_root_password: "{{ powerdns_vault_mysql_root_password }}"
@@ -57,8 +59,8 @@ powerdns_pdns_admin:
   - gunicorn
 
 powerdns_version: 4.9.3
-powerdns_webserver_port: 8081
-powerdns_api_key: "{{ powerdns_vault_api_key }}"
+powerdns_webserver_ip: "{{ powerdns_vault_webserver_ip }}"
+
 powerdns_pdnsadmin_admin_password: "{{ powerdns_vault_pdnsadmin_admin_password }}"
 powerdns_pdnsadmin_admin_user: "{{ powerdns_vault_pdnsadmin_admin_user }}"
 powerdns_pdnsadmin_admin_email: "{{ powerdns_vault_pdnsadmin_admin_email }}"
@@ -67,3 +69,11 @@ powerdns_pdnsadmin_allow_signup: false
 
 powerdns_pdnsadmin_admin_user_system: powerdnsadmin
 powerdns_pdnsadmin_admin_group_system: powerdnsadmin
+
+powerdns_api_url: "http://{{ powerdns_webserver_ip }}:{{ powerdns_webserver_api_port }}/api/v1"
+powerdns_webserver_api_port: 8081
+powerdns_api_key: "{{ powerdns_vault_api_key }}"
+
+powerdns_zones:
+  - name: "homelab.local."
+    kind: "Native"

@@ -1,0 +1,76 @@
+---
+- name: Insert or update pdns_api_url setting
+  community.mysql.mysql_query:
+    login_host: "{{ powerdns_db_host }}"
+    login_user: "{{ powerdns_db_user }}"
+    login_password: "{{ powerdns_db_password }}"
+    login_db: "{{ powerdns_database }}"
+    query: |
+      INSERT INTO setting (name, value)
+      VALUES ('pdns_api_url', '{{ powerdns_api_url }}')
+      ON DUPLICATE KEY UPDATE value = '{{ powerdns_api_url }}';
+
+- name: Insert or update pdns_api_key setting
+  community.mysql.mysql_query:
+    login_host: "{{ powerdns_db_host }}"
+    login_user: "{{ powerdns_db_user }}"
+    login_password: "{{ powerdns_db_password }}"
+    login_db: "{{ powerdns_database }}"
+    query: |
+      INSERT INTO setting (name, value)
+      VALUES ('pdns_api_key', '{{ powerdns_api_key }}')
+      ON DUPLICATE KEY UPDATE value = '{{ powerdns_api_key }}';
+
+- name: Ensure password column is large enough
+  community.mysql.mysql_query:
+    login_user: "{{ powerdns_db_user }}"
+    login_password: "{{ powerdns_db_password }}"
+    login_db: "{{ powerdns_database }}"
+    query: "ALTER TABLE user MODIFY password VARCHAR(255);"
+  register: alter_password_column
+  changed_when: true
+
+- name: Check if admin user exists
+  community.mysql.mysql_query:
+    login_user: "{{ powerdns_db_user }}"
+    login_password: "{{ powerdns_db_password }}"
+    login_db: "{{ powerdns_database }}"
+    query: "SELECT COUNT(*) AS count FROM user WHERE username = '{{ powerdns_pdnsadmin_admin_user }}'"
+  register: admin_user_check
+
+- name: Copy script to add admin user (if not exists)
+  ansible.builtin.template:
+    src: create_admin.py.j2
+    dest: "/opt/powerdns-admin/create_admin.py"
+    owner: "{{ powerdns_pdnsadmin_admin_user_system }}"
+    group: "{{ powerdns_pdnsadmin_admin_group_system }}"
+    mode: '0755'
+
+- name: Execute script to create admin user (if not exists)
+  ansible.builtin.command:
+    cmd: "/opt/powerdns-admin/venv/bin/python create_admin.py"
+    chdir: "/opt/powerdns-admin"
+  environment:
+    FLASK_APP: "powerdnsadmin"
+    FLASK_CONF: /opt/powerdns-admin/config.py
+    SQLALCHEMY_DATABASE_URI: "mysql+pymysql://{{ powerdns_db_user }}:{{ powerdns_db_password }}@localhost/{{ powerdns_database }}"
+    ADMIN_USERNAME: "{{ powerdns_pdnsadmin_admin_user }}"
+    ADMIN_PASSWORD: "{{ powerdns_pdnsadmin_admin_password }}"
+    ADMIN_EMAIL: "{{ powerdns_pdnsadmin_admin_email }}"
+  become: true
+  become_user: "{{ powerdns_pdnsadmin_admin_user_system }}"
+  when: admin_user_check.query_result[0][0].count == 0
+  changed_when: true
+
+- name: Add a zone dns
+  ansible.builtin.uri:
+    url: "{{ powerdns_api_url }}/servers/localhost/zones"
+    method: POST
+    headers:
+      X-API-KEY: "{{ powerdns_api_key }}"
+      Content-Type: "application/json"
+    body_format: json
+    body: "{{ item }}"
+  loop: "{{ powerdns_zones }}"
+  register: add_zone_response
+  failed_when: add_zone_response.status not in [200, 201]
