@@ -1,8 +1,8 @@
 
 # 🚀 Proxmox VM Automation Project
 
-![Stars](https://img.shields.io/github/stars/xgueret/proxmox-vms?style=social)![Last Commit](https://img.shields.io/github/last-commit/xgueret/proxmox-vms)![Status](https://img.shields.io/badge/Status-Active-brightgreen)![License](https://img.shields.io/badge/License-MIT-blue)
-![Terraform](https://img.shields.io/badge/Terraform-%E2%89%A51.11.0-623CE4)![Ansible](https://img.shields.io/badge/Ansible-2.14+-EE0000)
+![Stars](https://img.shields.io/github/stars/xgueret/proxmox-vms?style=social) ![Last Commit](https://img.shields.io/github/last-commit/xgueret/proxmox-vms)![Status](https://img.shields.io/badge/Status-Active-brightgreen) ![License](https://img.shields.io/badge/License-MIT-blue)
+![Terraform](https://img.shields.io/badge/Terraform-%E2%89%A51.11.0-623CE4) ![Ansible](https://img.shields.io/badge/Ansible-2.14+-EE0000)
 
 **This project provides Terraform and Ansible automation for managing virtual machines in a Proxmox VE environment.**
 
