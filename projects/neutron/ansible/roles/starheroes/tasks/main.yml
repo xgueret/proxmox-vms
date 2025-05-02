@@ -1,0 +1,38 @@
+---
+- name: Create path for starheroes app
+  ansible.builtin.file:
+    path: "{{ app_data_path }}/starheroes/"
+    state: directory
+    owner: root
+    group: "{{ app_group }}"
+    mode: '0770'
+
+- name: Copy Docker Compose file
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "{{ app_data_path }}/starheroes/docker-compose.yml"
+    owner: root
+    group: "{{ app_group }}"
+    mode: '0774'
+
+- name: Copy the .env file
+  ansible.builtin.copy:
+    src: .env
+    dest: "{{ app_data_path }}/starheroes/.env"
+    owner: root
+    group: "{{ app_group }}"
+    mode: '0664'
+
+- name: Stop and remove existing Docker Compose services
+  ansible.builtin.shell: |
+    cd {{ app_data_path }}/starheroes
+    docker compose down
+  register: starheroes_compose_down
+  changed_when: true
+
+- name: Start Docker Compose services
+  ansible.builtin.shell: |
+    cd {{ app_data_path }}/starheroes
+    docker compose up -d
+  register: starheroes_compose_up
+  changed_when: true

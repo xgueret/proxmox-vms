@@ -1,0 +1,13 @@
+homer_app_data_path: "{{ app_data_path }}/homer"
+homer_image: b4bz/homer
+homer_image_version: latest
+homer_homer: "{{ traefik_web_vault[0] }}"
+
+homer_proxmox_user: "{{ vault_proxmox_user }}"
+homer_proxmox_token_id: "{{ vault_proxmox_token_id }}"
+homer_proxmox_token_secret: "{{ vault_proxmox_token_secret }}"
+homer_proxmox_node_name: "{{ vault_proxmox_node_name }}"
+
+homer_config:
+  title: DASHBOARD
+  subtitle: HixLABS

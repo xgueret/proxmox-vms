@@ -1,0 +1,12 @@
+planka_config:
+  service_name: planka
+  app_data_path: "{{ app_data_path }}/planka"
+  image: ghcr.io/plankanban/planka
+  image_version: latest
+  host: "{{ traefik_web_vault[3].host }}"
+  port: "{{ traefik_web_vault[3].port }}"
+  secret_key: "{{ planka_config_secret_key_vault }}"
+  default_admin_email: "{{ planka_default_admin_email_vault }}"
+  default_admin_name: "{{ planka_default_admin_name_vault }}"
+  default_admin_username: "{{ planka_default_admin_username_vault }}"
+  default_admin_password: "{{ planka_default_admin_password_vault }}"

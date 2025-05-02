@@ -1,0 +1,32 @@
+services:
+
+  {{ planka_config.service_name }}:
+    image: {{ planka_config.image }}:{{ planka_config.image_version }}
+    container_name: {{ planka_config.service_name }}
+    restart: unless-stopped
+    ports:
+      - "{{ planka_config.port }}:1337"
+    environment:
+      - BASE_URL=http://{{ traefik_web_vault[3].host }}
+      - TRUST_PROXY=0
+      - DATABASE_URL=postgresql://{{ postgres_config.postgres_user }}:{{ postgres_config.postgres_password }}@{{ postgres_config.service_name }}:5432/{{ planka_bdd }}
+      - SECRET_KEY={{ planka_config.secret_key }}
+      - DEFAULT_ADMIN_EMAIL={{ planka_config.default_admin_email }}
+      - DEFAULT_ADMIN_PASSWORD={{ planka_config.default_admin_password }}
+      - DEFAULT_ADMIN_NAME={{ planka_config.default_admin_name }}
+      - DEFAULT_ADMIN_USERNAME={{ planka_config.default_admin_username }}
+    volumes:
+      - planka-storage:/app/data
+    networks:
+      - traefik_default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.{{ planka_config.service_name }}.rule=Host(`{{ planka_config.host }}`)"
+      - "traefik.http.routers.{{ planka_config.service_name }}.entrypoints=web"
+
+volumes:
+  planka-storage:
+    
+networks:
+  traefik_default:
+    external: true

@@ -1,0 +1,9 @@
+---
+traefik_app_data_path: "{{ app_data_path }}/traefik"
+traefik_domain: "traefik.homelab.local"
+traefik_network: traefik
+traefik_version: 2.5
+traefik_image: "traefik:v{{ traefik_version }}"
+
+traefik_web: "{{ traefik_web_vault }}"
+traefik_websecure: "{{ traefik_websecure_vault }}"

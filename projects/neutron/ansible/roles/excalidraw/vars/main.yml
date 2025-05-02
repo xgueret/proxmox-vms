@@ -1,0 +1,7 @@
+excalidraw_config:
+  service_name: excalidraw
+  app_data_path: "{{ app_data_path }}/excalidraw"
+  image: excalidraw/excalidraw
+  image_version: latest
+  host: "{{ traefik_web_vault[1].host }}"
+  port: "{{ traefik_web_vault[1].port }}"

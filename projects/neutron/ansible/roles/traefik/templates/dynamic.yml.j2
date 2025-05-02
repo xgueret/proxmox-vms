@@ -1,0 +1,57 @@
+http:
+
+  middlewares:
+
+    cors:
+        headers:
+          accessControlAllowOriginList: "*"
+          accessControlAllowMethods: "GET, POST, OPTIONS"
+          accessControlAllowHeaders: "*"
+          accessControlAllowCredentials: true
+
+  serversTransports:
+
+    insecure-transport:
+      insecureSkipVerify: true
+        
+  routers:
+    
+  {% for traefik in traefik_websecure %}
+    {{ traefik.name }}:
+        rule: "Host(`{{ traefik.host }}`)"
+        entryPoints:
+          - websecure
+        service: {{ traefik.name }}-service
+        tls:
+          certresolver: myresolver
+          domains:
+            - main: "{{ traefik.host }}"
+        middlewares:
+          - cors
+  {% endfor %}
+
+  {% for traefik in traefik_web %}
+    {{ traefik.name }}:
+        rule: "Host(`{{ traefik.host }}`)"
+        entryPoints:
+          - web
+        service: {{ traefik.name }}-service
+  {% endfor %}
+  
+  services:
+
+  {% for traefik in traefik_websecure %}
+    {{ traefik.name }}-service:
+        loadBalancer:
+          serversTransport: insecure-transport
+          servers:
+            - url: "https://{{ traefik.ip }}:{{ traefik.port }}"
+          passHostHeader: true
+  {% endfor %}
+
+  {% for traefik in traefik_web %}
+    {{ traefik.name }}-service:
+        loadBalancer:
+          servers:
+            - url: "http://{{ traefik.ip }}:{{ traefik.port }}"
+  {% endfor %}

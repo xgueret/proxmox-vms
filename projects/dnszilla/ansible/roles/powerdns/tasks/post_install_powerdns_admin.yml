@@ -62,7 +62,16 @@
   when: admin_user_check.query_result[0][0].count == 0
   changed_when: true
 
-- name: Add a zone dns
+- name: Get existing DNS zones
+  ansible.builtin.uri:
+    url: "{{ powerdns_api_url }}/servers/localhost/zones"
+    method: GET
+    headers:
+      X-API-KEY: "{{ powerdns_api_key }}"
+    return_content: true
+  register: existing_zones_response
+
+- name: Add missing DNS zones
   ansible.builtin.uri:
     url: "{{ powerdns_api_url }}/servers/localhost/zones"
     method: POST
@@ -70,7 +79,39 @@
       X-API-KEY: "{{ powerdns_api_key }}"
       Content-Type: "application/json"
     body_format: json
-    body: "{{ item }}"
+    body: "{{ item | json_query('{name: name, kind: kind}') }}"
   loop: "{{ powerdns_zones }}"
+  when: >
+    item.name not in (
+      existing_zones_response.json | map(attribute='name') | list
+    )
   register: add_zone_response
   failed_when: add_zone_response.status not in [200, 201]
+
+- name: Add DNS records to zones
+  ansible.builtin.uri:
+    url: "{{ powerdns_api_url }}/servers/localhost/zones/{{ item.0.name }}"
+    method: PATCH
+    headers:
+      X-API-Key: "{{ powerdns_api_key }}"
+      Content-Type: "application/json"
+    body_format: json
+    body: |
+      {
+        "rrsets": [
+          {
+            "name": "{{ item.1.name }}",
+            "type": "{{ item.1.type }}",
+            "ttl": {{ item.1.ttl | default(3600) }},
+            "changetype": "REPLACE",
+            "records": [
+              {
+                "content": "{{ item.1.content }}",
+                "disabled": false
+              }
+            ]
+          }
+        ]
+      }
+    status_code: [200, 201, 204]
+  loop: "{{ powerdns_zones | subelements('records', skip_missing=True) }}"

@@ -1,0 +1,2 @@
+gitlab_deploy_gitlab_user: gitlab_deploy
+gitlab_deploy_gitlab_user_pub_key: "${ gitlab_user_pub_key_vault }"

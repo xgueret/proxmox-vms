@@ -1,0 +1,24 @@
+services:
+  {{ excalidraw_config.service_name }}:
+    image: {{ excalidraw_config.image }}:{{ excalidraw_config.image_version }}
+    container_name: {{ excalidraw_config.service_name }}
+    restart: unless-stopped
+    ports:
+      - "{{ excalidraw_config.port }}:80"
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - excalidraw-storage:/opt/excalidraw
+    networks:
+      - traefik_default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.{{ excalidraw_config.service_name }}.rule=Host(`{{ excalidraw_config.host }}`)"
+      - "traefik.http.routers.{{ excalidraw_config.service_name }}.entrypoints=web"
+
+volumes:
+  excalidraw-storage:
+    
+networks:
+  traefik_default:
+    external: true
