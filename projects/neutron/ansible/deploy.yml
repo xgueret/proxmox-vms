@@ -25,26 +25,18 @@
     - role: traefik
       tags:
         - traefik
-
-    # - role: gitlab_deploy
-    #   tags:
-    #     - gitlab-deploy
-
-    # - role: portainer_agent
-    #   tags:
-    #     - portainer-agent
-    # - role: homer
-    #   tags:
-    #     - homer
-    # - role: excalidraw
-    #   tags:
-    #     - excalidraw
-    # - role: postgres
-    #   tags:
-    #     - postgres
-    # - role: wiki
-    #   tags:
-    #     - wiki
-    # - role: planka
-    #   tags:
-    #     - planka
+    - role: portainer_agent
+      tags:
+        - portainer-agent
+    - role: homer
+      tags:
+        - homer
+    - role: excalidraw
+      tags:
+        - excalidraw
+    - role: postgres
+      tags:
+        - postgres
+    - role: planka
+      tags:
+        - planka
