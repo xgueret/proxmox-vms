@@ -26,7 +26,10 @@ This project provides Terraform and Ansible automation for managing virtual mach
 ```bash
 .
 ├── modules/ # Reusable Terraform modules
+│ └── proxmox_vm_template/ # Main VM creation module
 ├── projects/ # Infrastructure projects
+│ ├── dnszilla/ # PowerDNS server + PowerDNS-Admin
+│ └── neutron/ # Docker stack with Traefik, Portainer, etc.
 ├── github/ # GitHub repository management
 ├── ansible.cfg # Ansible configuration
 ├── .pre-commit-config.yaml # Git hooks
