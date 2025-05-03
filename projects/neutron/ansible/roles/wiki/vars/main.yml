@@ -1,0 +1,10 @@
+wiki_config:
+  service_name: wiki
+  app_data_path: "{{ app_data_path }}/wiki"
+  image: ghcr.io/requarks/wiki
+  image_version: 2
+  host: "{{ traefik_web_vault[2].host }}"
+  port: "{{ traefik_web_vault[2].port }}"
+  postgres_db: "{{ wiki_bdd }}"
+  postgres_password: "{{ postgres_config.postgres_password }}"
+  postgres_user: "{{ postgres_config.postgres_user }}"

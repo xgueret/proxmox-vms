@@ -77,3 +77,40 @@ powerdns_api_key: "{{ powerdns_vault_api_key }}"
 powerdns_zones:
   - name: "homelab.local."
     kind: "Native"
+    records:
+      - name: "traefik.homelab.local."
+        type: "A"
+        content: "192.168.1.20"
+        ttl: 3600
+      - name: "portainer.homelab.local."
+        type: "A"
+        content: "192.168.1.20"
+        ttl: 3600
+      - name: "homer.homelab.local."
+        type: "A"
+        content: "192.168.1.20"
+        ttl: 3600
+      - name: "excalidraw.homelab.local."
+        type: "A"
+        content: "192.168.1.20"
+        ttl: 3600
+      - name: "planka.homelab.local."
+        type: "A"
+        content: "192.168.1.20"
+        ttl: 3600
+      - name: "powerdns.homelab.local."
+        type: "A"
+        content: "192.168.1.20"
+        ttl: 3600
+      - name: "chatbot.homelab.local."
+        type: "A"
+        content: "192.168.1.20"
+        ttl: 3600
+      - name: "portainer.homelab.local."
+        type: "A"
+        content: "192.168.1.20"
+        ttl: 3600
+      - name: "proxmox.homelab.local."
+        type: "A"
+        content: "192.168.1.20"
+        ttl: 3600

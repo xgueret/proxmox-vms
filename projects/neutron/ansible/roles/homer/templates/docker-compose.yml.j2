@@ -1,0 +1,22 @@
+services:
+  homer:
+    image: {{ homer_image }}:{{ homer_image_version }}
+    container_name: homer
+    ports:
+      - "{{ homer_homer.port }}:8080"
+    volumes:
+      - "{{ homer_app_data_path }}/assets:/www/assets"
+    user: 1000:1000 # default
+    environment:
+      - INIT_ASSETS=0 # default, requires the config directory to be writable for the container user (see user option)
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homer.rule=Host(`{{ homer_homer.host }}`)"
+      - "traefik.http.routers.homer.entrypoints=web"
+    networks:      
+      - traefik_default
+
+networks:
+  traefik_default:
+    external: true

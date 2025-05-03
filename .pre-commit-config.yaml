@@ -12,7 +12,8 @@ repos:
     rev: v25.1.1  # remplace par la version stable la plus récente
     hooks:
       - id: ansible-lint
-
+        additional_dependencies:
+          - jmespath
   - repo: local
     hooks:
       - id: check-ansible-vault

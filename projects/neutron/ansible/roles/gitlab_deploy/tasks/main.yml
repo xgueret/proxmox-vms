@@ -1,0 +1,31 @@
+---
+- name: Create GitLab user
+  ansible.builtin.user:
+    name: "{{ gitlab_deploy_gitlab_user }}"
+    shell: /bin/bash
+    groups: "docker,{{ app_group }}"
+    create_home: true
+    password: ''  # Make sure the password is empty
+    state: present
+
+- name: Create .ssh directory for the user
+  ansible.builtin.file:
+    path: "/home/{{ gitlab_deploy_gitlab_user }}/.ssh"
+    state: directory
+    owner: "{{ gitlab_deploy_gitlab_user }}"
+    group: "{{ gitlab_deploy_gitlab_user }}"
+    mode: '0700'
+
+- name: Add SSH public key for the user
+  ansible.posix.authorized_key:
+    user: "{{ gitlab_deploy_gitlab_user }}"
+    state: present
+    key: "{{ gitlab_deploy_gitlab_user_pub_key }}"
+
+- name: Ensure password authentication is disabled
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^PasswordAuthentication'
+    line: 'PasswordAuthentication no'
+    state: present
+  notify: Restart SSH

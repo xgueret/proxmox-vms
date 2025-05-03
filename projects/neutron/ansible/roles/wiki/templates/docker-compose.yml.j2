@@ -1,0 +1,30 @@
+services:
+
+  {{ wiki_config.service_name }}:
+    image: {{ wiki_config.image }}:{{ wiki_config.image_version }}
+    container_name: {{ wiki_config.service_name }}
+    restart: unless-stopped
+    ports:
+      - "{{ wiki_config.port }}:3000"
+    environment:
+      DB_TYPE: postgres
+      DB_HOST: {{ postgres_config.service_name }}
+      DB_PORT: 5432
+      DB_USER: "{{ postgres_config.postgres_user }}"
+      DB_PASS: "{{ postgres_config.postgres_password }}"
+      DB_NAME: "{{ wiki_bdd }}"
+    volumes:
+      - wiki-storage:/opt/excalidraw
+    networks:
+      - traefik_default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.{{ wiki_config.service_name }}.rule=Host(`{{ wiki_config.host }}`)"
+      - "traefik.http.routers.{{ wiki_config.service_name }}.entrypoints=web"
+
+volumes:
+  wiki-storage:
+    
+networks:
+  traefik_default:
+    external: true

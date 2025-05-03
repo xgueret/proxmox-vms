@@ -26,7 +26,10 @@ This project provides Terraform and Ansible automation for managing virtual mach
 ```bash
 .
 ├── modules/ # Reusable Terraform modules
+│ └── proxmox_vm_template/ # Main VM creation module
 ├── projects/ # Infrastructure projects
+│ ├── dnszilla/ # PowerDNS server + PowerDNS-Admin
+│ └── neutron/ # Docker stack with Traefik, Portainer, etc.
 ├── github/ # GitHub repository management
 ├── ansible.cfg # Ansible configuration
 ├── .pre-commit-config.yaml # Git hooks
@@ -85,17 +88,40 @@ This project provides Terraform and Ansible automation for managing virtual mach
 
 ### 🦖 DNSzilla
 
-**Location**: `projects/dnszilla/`
-Automates deployment of PowerDNS server with PowerDNS-Admin web interface. Includes:
+**Location**: `projects/dnszilla/`  
+**Description**: Automated deployment of a complete DNS management solution.
 
-- Terraform VM provisioning
-- Ansible configuration for DNS services
-- MySQL backend integration
+**Core Components**:
+-  [PowerDNS](https://www.powerdns.com/) (authoritative DNS server)
+-  [PowerDNS-Admin](https://github.com/PowerDNS-Admin/PowerDNS-Admin) (web interface)
+-  [MySQL](https://www.mysql.com/) (database backend)
 
-### ⚛️ Neutron (Coming Soon)
+**Key Features**:
+- Terraform-provisioned VM optimized for DNS services
+- Secure API integration between components
+- Pre-configured DNS zones for homelab environments
+- Automated Let's Encrypt certificate setup
+- Role-based access control for administration
 
-**Location**: `projects/neutron/`
-(TODO: Add description once project is developed)
+**Technical Stack**:
+- **Provisioning**: Terraform
+- **Configuration**: Ansible
+- **Database**: MariaDB
+- **Web Framework**:  Flask (PowerDNS-Admin)
+
+### ⚛️ Neutron
+
+**Location**: projects/neutron/
+**Description**: Complete containerization stack with reverse proxy.
+
+**Included Services:**
+
+-  **Traefik** (reverse proxy)
+- **Portainer** Agent (Docker management)
+- **Homer** (dashboard)
+- **Excalidraw** (drawing tool)
+- **Planka** (project management)
+- **PostgreSQL** (database)
 
 ## 👥 Contributors
 
