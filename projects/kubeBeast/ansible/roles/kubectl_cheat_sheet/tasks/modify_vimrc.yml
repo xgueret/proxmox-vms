@@ -1,0 +1,16 @@
+- name: Update repositories cache and install "vim" package
+  ansible.builtin.apt:
+    name: vim
+    update_cache: true
+
+- name: Ensure .vimrc has proper permissions
+  ansible.builtin.file:
+    path: "{{ home_dir }}/.vimrc"
+    owner: "{{ ansible_uid }}"
+    group: "{{ ansible_gid }}"
+    mode: '0644'
+
+- name: Execute source .vimrc
+  ansible.builtin.shell: source {{ home_dir }}/.vimrc
+  args:
+    executable: /bin/bash

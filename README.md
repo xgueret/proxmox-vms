@@ -60,7 +60,7 @@
    terraform init
    terraform plan
    terraform apply
-
+   
    ```
 
 #### 2. Configuration with Ansible
@@ -85,16 +85,59 @@
 * **Ansible configuration for DNS services**
 * **MySQL backend integration**
 
-### ⚛️ Neutron (Coming Soon)
+### ⚛️ Neutron
 
-**Location**: `projects/neutron/`
-**(TODO: Add description once project is developed)**
+**Location**: `projects/neutron/`  
+**Description**: Complete containerization stack with reverse proxy and management tools for homelab environments.
+
+**Core Components**:
+- **Traefik**: Reverse proxy with automatic SSL certificates
+- **Portainer Agent**: Docker container management
+- **Homer**: Customizable dashboard for homelab services
+- **Excalidraw**: Collaborative whiteboarding tool
+- **Planka**: Open-source Trello alternative
+- **PostgreSQL**: Database backend for applications
+
+**Key Features**:
+- Terraform-provisioned VM optimized for container workloads
+- Secure Docker installation with proper user permissions
+- Automated service deployment via Docker Compose
+- Centralized authentication via Traefik middleware
+- Service discovery through Docker provider
+- Let's Encrypt integration for automatic HTTPS
+
+**Technical Stack**:
+- **Provisioning**: Terraform
+- **Configuration**: Ansible
+- **Container Runtime**: Docker with Compose plugin
+- **Reverse Proxy**: Traefik v2.5
+- **Database**: PostgreSQL
+
+### 🐳 kubeBeast
+
+**Location**: `projects/kubeBeast/`  
+**Description**: Automated deployment of a Kubernetes cluster with all necessary components for container orchestration.
+
+**Core Components**:
+- **Kubernetes Control Plane**: Master node for cluster management
+- **Worker Nodes**: Scalable worker nodes for running containers
+- **Container Runtime**: Containerd for efficient container execution
+- **CNI Plugins**: Networking components for pod communication
+- **Monitoring**: Metrics server for resource tracking
+
+**Key Features**:
+- Terraform-provisioned VMs optimized for Kubernetes
+- Ansible-automated cluster initialization
+- Secure container runtime with Containerd
+- Calico networking for pod-to-pod communication
+- Kubernetes dashboard for cluster management
+- Metrics server for resource monitoring
 
 ## 👥 Contributors
 
 * **Author**: Xavier GUERET
   [![GitHub followers](https://img.shields.io/github/followers/xgueret?style=social)](https://github.com/xgueret)[![Twitter Follow](https://img.shields.io/twitter/follow/xgueret?style=social)](https://x.com/hixmaster)[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/xavier-gueret-47bb3019b/)
 
-# ✨ Contributing
+# 🤝 Contributing
 
 **Contributions are welcome! Please feel free to submit a **[Pull Request](https://github.com/xgueret/proxmox-vms/pulls).
