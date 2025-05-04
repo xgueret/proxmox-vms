@@ -1,0 +1,13 @@
+all:
+  children:
+    control_plan_nodes:
+      hosts:
+        kubebeast-30:
+    worker_nodes:
+      hosts:
+        kubebeast-31:
+        kubebeast-32:
+    cluster_nodes:
+      children:
+        control_plan_nodes:
+        worker_nodes:

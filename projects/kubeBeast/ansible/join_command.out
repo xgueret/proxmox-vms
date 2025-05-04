@@ -1,0 +1,1 @@
+kubeadm join 192.168.1.30:6443 --token q2g31g.be60qrydeimtzjn1 --discovery-token-ca-cert-hash sha256:10383a4f56d7207bb82cf71d9c8597e57abc500cd2522fe061c62273f5e3ffb4
