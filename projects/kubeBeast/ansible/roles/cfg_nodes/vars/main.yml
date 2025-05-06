@@ -10,3 +10,4 @@ cfg_nodes_packages:
   - jq
   - openssl
   - software-properties-common
+  - vim

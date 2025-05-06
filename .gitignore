@@ -71,3 +71,5 @@ node_modules/
 push.sh
 
 wip.md
+
+projects/kubeBeast/ansible/join_command.out
