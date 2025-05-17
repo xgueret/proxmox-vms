@@ -1,3 +1,4 @@
+---
 planka_config:
   service_name: planka
   app_data_path: "{{ app_data_path }}/planka"

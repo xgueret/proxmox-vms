@@ -13,9 +13,9 @@ http:
 
     insecure-transport:
       insecureSkipVerify: true
-        
+
   routers:
-    
+
   {% for traefik in traefik_websecure %}
     {{ traefik.name }}:
         rule: "Host(`{{ traefik.host }}`)"
@@ -37,7 +37,7 @@ http:
           - web
         service: {{ traefik.name }}-service
   {% endfor %}
-  
+
   services:
 
   {% for traefik in traefik_websecure %}

@@ -14,7 +14,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.homer.rule=Host(`{{ homer_homer.host }}`)"
       - "traefik.http.routers.homer.entrypoints=web"
-    networks:      
+    networks:
       - traefik_default
 
 networks:

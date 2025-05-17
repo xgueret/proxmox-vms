@@ -1,3 +1,4 @@
+---
 excalidraw_config:
   service_name: excalidraw
   app_data_path: "{{ app_data_path }}/excalidraw"

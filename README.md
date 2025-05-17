@@ -60,7 +60,7 @@
    terraform init
    terraform plan
    terraform apply
-   
+
    ```
 
 #### 2. Configuration with Ansible
@@ -85,12 +85,49 @@
 * **Ansible configuration for DNS services**
 * **MySQL backend integration**
 
+### 🦖 DNSzilla
+
+**Location**: `projects/dnszilla/`
+**Automates deployment of PowerDNS server with PowerDNS-Admin web interface. Includes:**
+
+* **Terraform VM provisioning**
+* **Ansible configuration for DNS services**
+* **MySQL backend integration**
+
+-
+
+### 🐾 Cerberus
+
+ **Location** : `projects/cerberus/`
+
+**Lightweight VM deployed on Proxmox to host a standalone Traefik reverse proxy using Docker. Built for secure, isolated ingress management with minimal overhead. Includes:**
+
+* **Terraform-based VM provisioning on Proxmox**
+* **Ansible-driven setup of Docker and system configuration**
+* **Docker Compose deployment of Traefik v2.5**
+* **Let's Encrypt integration for automated SSL management**
+
+ **Key Highlights** :
+
+* Dedicated VM hosting only a single Traefik container for maximum isolation
+* Docker simplifies updates, configuration, and rollback workflows
+* Traefik middleware-ready (authentication, rate limiting, etc.)
+* Designed as an ingress point for internal services or microservices stack
+
+ **Technical Stack** :
+
+* **Infrastructure Provisioning** : Terraform (Proxmox provider)
+* **Configuration Management** : Ansible
+* **Container Runtime** : Docker + Compose
+* **Reverse Proxy** : Traefik v2.5
+
 ### ⚛️ Neutron
 
-**Location**: `projects/neutron/`  
+**Location**: `projects/neutron/`
 **Description**: Complete containerization stack with reverse proxy and management tools for homelab environments.
 
 **Core Components**:
+
 - **Traefik**: Reverse proxy with automatic SSL certificates
 - **Portainer Agent**: Docker container management
 - **Homer**: Customizable dashboard for homelab services
@@ -99,14 +136,14 @@
 - **PostgreSQL**: Database backend for applications
 
 **Key Features**:
+
 - Terraform-provisioned VM optimized for container workloads
 - Secure Docker installation with proper user permissions
 - Automated service deployment via Docker Compose
 - Centralized authentication via Traefik middleware
-- Service discovery through Docker provider
-- Let's Encrypt integration for automatic HTTPS
 
 **Technical Stack**:
+
 - **Provisioning**: Terraform
 - **Configuration**: Ansible
 - **Container Runtime**: Docker with Compose plugin
@@ -115,10 +152,11 @@
 
 ### 🐳 kubeBeast
 
-**Location**: `projects/kubeBeast/`  
+**Location**: `projects/kubeBeast/`
 **Description**: Automated deployment of a Kubernetes cluster with all necessary components for container orchestration.
 
 **Core Components**:
+
 - **Kubernetes Control Plane**: Master node for cluster management
 - **Worker Nodes**: Scalable worker nodes for running containers
 - **Container Runtime**: Containerd for efficient container execution
@@ -126,6 +164,7 @@
 - **Monitoring**: Metrics server for resource tracking
 
 **Key Features**:
+
 - Terraform-provisioned VMs optimized for Kubernetes
 - Ansible-automated cluster initialization
 - Secure container runtime with Containerd

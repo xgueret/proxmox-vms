@@ -1,3 +1,4 @@
+---
 homer_app_data_path: "{{ app_data_path }}/homer"
 homer_image: b4bz/homer
 homer_image_version: latest

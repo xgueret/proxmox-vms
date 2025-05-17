@@ -1,3 +1,4 @@
+---
 powerdns_pdns_dependencies:
   - curl
   - software-properties-common

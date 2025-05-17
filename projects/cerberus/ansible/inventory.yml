@@ -1,0 +1,11 @@
+---
+all:
+  children:
+    proxmox:
+      hosts:
+        pve.local:
+    cerberus:
+      hosts:
+        cerberus-20:
+          ansible_host: cerberus-20
+          # ansible_python_interpreter: /usr/bin/python3

@@ -11,7 +11,8 @@
     - name: Kubeadm init
       ansible.builtin.command: "kubeadm init --pod-network-cidr {{ init_kubeadm_pod_cidr }} --kubernetes-version={{ k8s_version }}"
       args:
-        creates: /etc/kubernetes/admin.conf # skip this task if the file already exists
+        # skip this task if the file already exists
+        creates: /etc/kubernetes/admin.conf
       register: kubeadm_init
       changed_when: kubeadm_init.rc != 0
 

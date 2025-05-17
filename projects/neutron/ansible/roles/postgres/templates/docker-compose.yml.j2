@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     volumes:
       - {{ postgres_config.app_data_path }}/pgdata:/var/lib/postgresql/data
-      - {{ postgres_config.app_data_path }}/init-multiple-dbs.sh:/docker-entrypoint-initdb.d/init-multiple-dbs.sh 
+      - {{ postgres_config.app_data_path }}/init-multiple-dbs.sh:/docker-entrypoint-initdb.d/init-multiple-dbs.sh
     environment:
       - POSTGRES_USER={{ postgres_config.postgres_user }}
       - POSTGRES_PASSWORD={{ postgres_config.postgres_password }}

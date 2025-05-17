@@ -7,9 +7,6 @@
       ansible.builtin.service_facts:
       tags:
         - always
-    # - name: Print services facts
-    #   ansible.builtin.debug:
-    #     var: ansible_facts.services
   roles:
     - role: cfg_nodes
       tags:

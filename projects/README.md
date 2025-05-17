@@ -3,7 +3,6 @@
 ![Stars](https://img.shields.io/github/stars/xgueret/proxmox-vms?style=social) ![Last Commit](https://img.shields.io/github/last-commit/xgueret/proxmox-vms) ![Status](https://img.shields.io/badge/Status-Active-brightgreen) ![License](https://img.shields.io/badge/License-MIT-blue)
 ![Terraform](https://img.shields.io/badge/Terraform-≥1.11.0-623CE4) ![Ansible](https://img.shields.io/badge/Ansible-2.14+-EE0000)
 
-
 This project provides Terraform and Ansible automation for managing virtual machines in a Proxmox VE environment.
 
 ## 🌟 Features
@@ -36,14 +35,11 @@ This project provides Terraform and Ansible automation for managing virtual mach
 └── requirements.txt # Python dependencies
 ```
 
-
 ## 🔐 Security
 
 - Sensitive data encrypted with Ansible Vault
 - Pre-commit hooks verify encryption
 - Secure API token handling
-
-## 
 
 1. Clone the repository
 2. Install dependencies:
@@ -68,7 +64,7 @@ This project provides Terraform and Ansible automation for managing virtual mach
    terraform init
    terraform plan
    terraform apply
-   
+
    ```
 
 #### 2. Configuration with Ansible
@@ -88,22 +84,24 @@ This project provides Terraform and Ansible automation for managing virtual mach
 
 ### 🦖 DNSzilla
 
-**Location**: `projects/dnszilla/`  
+**Location**: `projects/dnszilla/`
 **Description**: Automated deployment of a complete DNS management solution.
 
 **Core Components**:
--  [PowerDNS](https://www.powerdns.com/) (authoritative DNS server)
--  [PowerDNS-Admin](https://github.com/PowerDNS-Admin/PowerDNS-Admin) (web interface)
--  [MySQL](https://www.mysql.com/) (database backend)
+
+- [PowerDNS](https://www.powerdns.com/) (authoritative DNS server)
+- [PowerDNS-Admin](https://github.com/PowerDNS-Admin/PowerDNS-Admin) (web interface)
+- [MySQL](https://www.mysql.com/) (database backend)
 
 **Key Features**:
+
 - Terraform-provisioned VM optimized for DNS services
 - Secure API integration between components
 - Pre-configured DNS zones for homelab environments
-- Automated Let's Encrypt certificate setup
 - Role-based access control for administration
 
 **Technical Stack**:
+
 - **Provisioning**: Terraform
 - **Configuration**: Ansible
 - **Database**: MariaDB
@@ -116,7 +114,6 @@ This project provides Terraform and Ansible automation for managing virtual mach
 
 **Included Services:**
 
--  **Traefik** (reverse proxy)
 - **Portainer** Agent (Docker management)
 - **Homer** (dashboard)
 - **Excalidraw** (drawing tool)

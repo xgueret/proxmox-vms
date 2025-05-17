@@ -1,3 +1,4 @@
+---
 wiki_config:
   service_name: wiki
   app_data_path: "{{ app_data_path }}/wiki"
